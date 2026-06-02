@@ -860,43 +860,7 @@ module.exports = defineConfig({
   });
 }
  
-/* ── WAITLIST (Brevo) ── */
-// HOW TO SET UP:
-// 1. Go to brevo.com → create free account
-// 2. Go to Contacts → Forms → Create a form
-// 3. Copy the form's API endpoint URL and paste it below
-// 4. Replace BREVO_FORM_URL with your actual Brevo form action URL
-const BREVO_FORM_URL = 'https://sibforms.com/serve/YOUR_BREVO_FORM_ID';
- 
-function joinList(){
-  const emailVal = document.getElementById('emailIn').value.trim();
-  if(!emailVal || !emailVal.includes('@')){
-    alert('Please enter a valid email address.');
-    return;
-  }
-  const btn = document.querySelector('.email-sub');
-  btn.textContent = 'Joining…';
-  btn.disabled = true;
- 
-  // Try Brevo first, show success regardless (Brevo uses redirect-based forms)
-  // For now show success immediately — wire Brevo form action URL to make it real
-  fetch(BREVO_FORM_URL, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-    body: 'EMAIL=' + encodeURIComponent(emailVal)
-  })
-  .catch(() => {}) // Brevo may block CORS — that's OK, the form still works
-  .finally(() => {
-    document.getElementById('emailIn').value = '';
-    btn.textContent = "✓ You're on the list";
-    btn.style.background = '#2D7A4E';
-    btn.disabled = false;
-    setTimeout(()=>{
-      btn.textContent = 'Join Waitlist';
-      btn.style.background = '';
-    }, 4000);
-  });
-}
+
  
 /* ── GSAP SCROLL ANIMATIONS ── */
 gsap.from('.feat-card',{
