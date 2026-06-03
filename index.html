@@ -333,11 +333,8 @@ footer{background:var(--forest);color:rgba(237,232,223,.6);padding:64px 56px 40p
   .compat-search{width:100%}
   .filter-row{flex-wrap:wrap;gap:8px}
   .f-btn{font-size:9px;padding:6px 12px}
-  /* Make table horizontally scrollable instead of overflowing */
-  .compat-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;font-size:12px;width:100%}
-  .compat-table thead,.compat-table tbody,.compat-table tr{display:table;width:100%;table-layout:fixed}
-  .compat-table thead{width:calc(100% - 0px)}
-  .compat-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  /* Horizontally scrollable table — min-width forces scroll instead of squishing */
+  .compat-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;min-width:540px;font-size:12px}
   .compat-table th,.compat-table td{padding:10px 14px;white-space:nowrap}
   .pkg-desc{display:none}
 
