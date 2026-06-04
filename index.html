@@ -237,6 +237,19 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 .suggest-row{text-align:center;padding:24px;font-family:var(--f-mono);font-size:12px;color:var(--muted);letter-spacing:.06em}
 .suggest-row a{color:var(--green);text-decoration:none}
 .suggest-row a:hover{text-decoration:underline}
+
+.stack-checker{padding:120px 56px;background:linear-gradient(160deg,#F5F0E8 0%,#ECE8E0 100%)}
+.stack-checker .sec-tag{color:var(--green)}
+.stack-inner{display:grid;gap:24px;max-width:1040px;margin-top:56px}
+.stack-actions{display:flex;gap:16px;flex-wrap:wrap}
+.stack-error{font-family:var(--f-mono);font-size:13px;color:var(--coral);background:rgba(224,85,48,.08);border:1px solid rgba(224,85,48,.15);border-radius:18px;padding:18px 22px}
+.stack-summary{display:flex;flex-wrap:wrap;gap:12px;align-items:center;font-family:var(--f-mono);font-size:13px;color:var(--forest);padding:18px 22px;background:rgba(79,163,107,.08);border:1px solid rgba(79,163,107,.12);border-radius:18px}
+.stack-result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:24px}
+.stack-card{background:rgba(255,255,255,.62);border:1px solid rgba(28,51,38,.08);border-radius:24px;padding:24px;box-shadow:0 28px 64px rgba(28,51,38,.08)}
+.stack-card-title{font-family:var(--f-display);font-size:18px;color:var(--forest);margin-bottom:18px}
+.stack-badges{display:flex;flex-wrap:wrap;gap:10px}
+.stack-empty{font-family:var(--f-mono);font-size:13px;color:var(--muted);padding:30px 22px;border:1px solid rgba(28,51,38,.08);border-radius:20px;text-align:center;background:rgba(255,255,255,.65)}
+.stack-reset{max-width:220px}
  
 /* TRANSPILER */
 .transpiler{padding:120px 56px;background:var(--forest)}
@@ -376,10 +389,7 @@ footer{background:var(--forest);color:rgba(237,232,223,.6);padding:64px 56px 40p
   <button class="mob-close" onclick="closeMob()">✕</button>
   <a href="#features" onclick="closeMob()">Features</a>
   <a href="#calculator" onclick="closeMob()">Calculator</a>
-  <a href="#compat" onclick="closeMob()">Compatibility</a>
-  <a href="#transpiler" onclick="closeMob()">Transpiler</a>
-  <a href="https://github.com/karadnagnath2007-hub/stackperf" onclick="closeMob()" target="_blank" rel="noopener">GitHub</a>
-  <a href="#waitlist" onclick="closeMob()" style="color:var(--coral)">Get Access</a>
+  <a href="#mystack" onclick="closeMob()">My Stack</a>
 </div>
  
 <nav id="nav">
@@ -387,6 +397,7 @@ footer{background:var(--forest);color:rgba(237,232,223,.6);padding:64px 56px 40p
   <ul class="nav-links">
     <li><a href="#features">Features</a></li>
     <li><a href="#calculator">Calculator</a></li>
+    <li><a href="#mystack">My Stack</a></li>
     <li><a href="#compat">Compatibility</a></li>
     <li><a href="#transpiler">Transpiler</a></li>
   </ul>
@@ -556,6 +567,25 @@ footer{background:var(--forest);color:rgba(237,232,223,.6);padding:64px 56px 40p
         <button class="share-cta" onclick="copyLink()">⬡ Copy shareable link</button>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- MY STACK CHECKER -->
+<section class="stack-checker" id="mystack">
+  <div class="reveal">
+    <p class="sec-tag">My Stack Checker</p>
+    <h2 class="sec-head">Is your stack <em>migration ready?</em></h2>
+    <p class="feat-subhead">Paste your package.json and instantly see what survives migration to Rspack, Bun, and Deno.</p>
+  </div>
+  <div class="stack-inner reveal">
+    <textarea class="t-code" id="stackInput" placeholder="Paste your package.json here…"></textarea>
+    <div class="stack-actions">
+      <button class="btn-fill" id="stackCheckButton" onclick="checkMyStack()">Check My Stack →</button>
+    </div>
+    <div class="stack-error" id="stackError" style="display:none"></div>
+    <div class="stack-summary" id="stackSummary" style="display:none"></div>
+    <div class="stack-results" id="stackResults" style="display:none"></div>
+    <button class="btn-fill" id="stackResetButton" style="display:none;max-width:220px" onclick="resetStackCheck()">Check another →</button>
   </div>
 </section>
  
@@ -1454,6 +1484,91 @@ function clearCompatSearch(){
   searchEl.value = '';
   filterCompat();
   searchEl.focus();
+}
+ 
+function isObject(value){
+  return value && typeof value === 'object' && !Array.isArray(value);
+}
+ 
+function checkMyStack(){
+  const input = document.getElementById('stackInput').value.trim();
+  const errorEl = document.getElementById('stackError');
+  const summaryEl = document.getElementById('stackSummary');
+  const resultsEl = document.getElementById('stackResults');
+  const resetBtn = document.getElementById('stackResetButton');
+
+  errorEl.style.display = 'none';
+  summaryEl.style.display = 'none';
+  resultsEl.style.display = 'none';
+  resetBtn.style.display = 'none';
+
+  let parsed;
+  try {
+    parsed = JSON.parse(input);
+  } catch {
+    errorEl.textContent = "That doesn't look like a valid package.json — check the format and try again.";
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  const deps = Object.assign({}, isObject(parsed.dependencies) ? parsed.dependencies : {}, isObject(parsed.devDependencies) ? parsed.devDependencies : {});
+  const pkgNames = Object.keys(deps)
+    .map(name => name.replace(/^[^a-zA-Z@]+/, '').trim())
+    .filter(Boolean);
+
+  if (!pkgNames.length) {
+    errorEl.textContent = "That doesn't look like a valid package.json — check the format and try again.";
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  const matched = [];
+  const seen = new Set();
+  pkgNames.forEach(name => {
+    const match = pkgs.find(p => p.n.toLowerCase() === name.toLowerCase());
+    if (match && !seen.has(match.n.toLowerCase())) {
+      seen.add(match.n.toLowerCase());
+      matched.push(match);
+    }
+  });
+
+  const totalCount = pkgNames.length;
+  const matchedCount = matched.length;
+  const readyCount = matched.filter(p => p.rs === 'full' && p.bn === 'full' && p.dn === 'full').length;
+  const brokenCount = matched.filter(p => p.rs === 'no' || p.bn === 'no' || p.dn === 'no').length;
+  const partialCount = matchedCount - readyCount - brokenCount;
+
+  summaryEl.innerHTML = `<div>${matchedCount} of ${totalCount} packages checked — <span class="pill-table pill-full">${readyCount} ready</span> <span class="pill-table pill-part">${partialCount} partial</span> <span class="pill-table pill-no">${brokenCount} broken</span></div>`;
+  summaryEl.style.display = 'flex';
+
+  if (!matchedCount) {
+    resultsEl.innerHTML = `<div class="stack-empty">None of your packages are in our database yet. <a href="https://github.com/karadnagnath2007-hub/stackperf/issues/new?title=Add+package+request&body=Package+name%3A%0ACategory%3A%0ARspack+compat%3A%0ABun+compat%3A%0ADeno+compat%3A" target="_blank">Suggest them on GitHub →</a></div>`;
+    resultsEl.style.display = 'block';
+    resetBtn.style.display = 'inline-flex';
+    return;
+  }
+
+  resultsEl.innerHTML = matched.map(p => `
+    <div class="stack-card">
+      <div class="stack-card-title">${p.n}</div>
+      <div class="stack-badges">
+        <span class="pill-table ${p.rs === 'full' ? 'pill-full' : p.rs === 'partial' ? 'pill-part' : 'pill-no'}">Rspack</span>
+        <span class="pill-table ${p.bn === 'full' ? 'pill-full' : p.bn === 'partial' ? 'pill-part' : 'pill-no'}">Bun</span>
+        <span class="pill-table ${p.dn === 'full' ? 'pill-full' : p.dn === 'partial' ? 'pill-part' : 'pill-no'}">Deno</span>
+      </div>
+    </div>`).join('');
+  resultsEl.style.display = 'grid';
+  resultsEl.classList.add('stack-result-grid');
+  resetBtn.style.display = 'inline-flex';
+}
+
+function resetStackCheck(){
+  document.getElementById('stackInput').value = '';
+  document.getElementById('stackError').style.display = 'none';
+  document.getElementById('stackSummary').style.display = 'none';
+  document.getElementById('stackResults').style.display = 'none';
+  document.getElementById('stackResetButton').style.display = 'none';
+  document.getElementById('stackInput').focus();
 }
  
 function setFilter(f,btn){
