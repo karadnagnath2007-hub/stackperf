@@ -253,8 +253,11 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 .t-code{font-family:var(--f-mono);font-size:13px;color:rgba(237,232,223,.75);background:transparent;border:none;outline:none;padding:28px;flex:1;resize:none;min-height:260px;line-height:1.8;letter-spacing:.02em}
 .t-code::placeholder{color:rgba(237,232,223,.2)}
 .t-out{font-family:var(--f-mono);font-size:13px;color:rgba(158,212,106,.85);padding:28px;min-height:260px;line-height:1.8;white-space:pre-wrap;overflow-y:auto}
+.t-out.error{color:var(--coral)}
+.t-note{font-family:var(--f-mono);font-size:12px;color:rgba(255,227,138,.9);background:rgba(255,231,148,.14);border:1px solid rgba(255,205,0,.2);border-radius:12px;padding:10px 14px;margin-top:14px;line-height:1.5}
 .t-trigger{grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:12px;padding:18px;background:rgba(158,212,106,.08);border:none;border-top:1px solid rgba(237,232,223,.07);cursor:none;font-family:var(--f-mono);font-size:13px;color:rgba(158,212,106,.85);letter-spacing:.1em;text-transform:uppercase;transition:background .3s}
 .t-trigger:hover{background:rgba(158,212,106,.15)}
+.t-trigger:disabled{opacity:.6;cursor:default}
 .t-arrow{font-size:18px}
  
 /* FOOTER */
@@ -1218,8 +1221,9 @@ module.exports = {
         <div class="t-dots"><span></span><span></span><span></span></div>
       </div>
       <div class="t-out" id="tOut"><span style="color:rgba(237,232,223,.2);font-style:italic">// Output appears here…</span></div>
+      <div class="t-note">AI-generated output. Always review before using in production.</div>
     </div>
-    <button class="t-trigger" onclick="doTranspile()">
+    <button class="t-trigger" id="tTrigger" onclick="doTranspile()">
       <span class="t-arrow">⟶</span> Transpile Config <span class="t-arrow">⟶</span>
     </button>
   </div>
@@ -1449,12 +1453,32 @@ const PROXY_URL = 'https://stackperf-proxy.karadnagnath2007.workers.dev';
 function doTranspile(){
   const inp = document.getElementById('tIn').value.trim();
   const out = document.getElementById('tOut');
+  const btn = document.getElementById('tTrigger');
+
+  const setButtonState = loading => {
+    btn.disabled = loading;
+    btn.innerHTML = loading ? 'Transpiling…' : '<span class="t-arrow">⟶</span> Transpile Config <span class="t-arrow">⟶</span>';
+  };
+
+  const setError = message => {
+    out.classList.add('error');
+    out.textContent = message;
+  };
+
+  const clearError = () => {
+    out.classList.remove('error');
+  };
+
   if(!inp){
-    out.innerHTML='<span style="color:rgba(237,232,223,.3);font-style:italic">// Paste a config first…</span>';
+    setError('Paste a webpack or Babel config first.');
+    setButtonState(false);
     return;
   }
-  out.innerHTML='<span style="color:rgba(158,212,106,.4)">// Connecting to AI transpiler…</span>';
- 
+
+  setButtonState(true);
+  clearError();
+  out.innerHTML = '<span style="color:rgba(158,212,106,.4)">// Connecting to AI transpiler…</span>';
+
   fetch(PROXY_URL, {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
@@ -1466,35 +1490,14 @@ function doTranspile(){
   })
   .then(data => {
     if (data.error) throw new Error(data.error);
+    clearError();
     out.textContent = data.result;
   })
-  .catch(err => {
-    // Fallback demo output while proxy.php isn't set up yet
-    out.textContent = `// ✓ rspack.config.js — converted from webpack
-// Note: Connect proxy.php to get real AI-powered conversion
-// Changes: removed babel-loader → rspack built-in transform
- 
-const { defineConfig } = require('@rspack/cli');
- 
-module.exports = defineConfig({
-  entry: './src/index.js',
-  module: {
-    rules: [
-      {
-        test: /\\.jsx?$/,
-        // rspack handles JSX natively — no loader needed
-        exclude: /node_modules/,
-        type: 'javascript/auto',
-      }
-    ]
-  },
-  builtins: {
-    react: { runtime: 'automatic' }
-  }
-});
- 
-// ↑ Result: ~88% faster cold build
-// ↑ Setup proxy.php with your Gemini key for real AI conversion`;
+  .catch(() => {
+    setError('Transpile failed. Check your input config and try again.');
+  })
+  .finally(() => {
+    setButtonState(false);
   });
 }
  
