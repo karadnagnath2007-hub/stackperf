@@ -43,11 +43,11 @@ function buildRows(pkgs) {
 }
 
 function injectRows(html, rowsHtml) {
-  const regex = /<tbody[^>]*id=["']compatBody["'][^>]*>\s*<\/tbody>/i;
+  const regex = /(<tbody[^>]*id=["']compatBody["'][^>]*>)[\s\S]*?(<\/tbody>)/i;
   if (!regex.test(html)) {
     throw new Error('Could not find <tbody id="compatBody"></tbody> in index.html');
   }
-  return html.replace(regex, `<tbody id="compatBody">\n${rowsHtml}\n  </tbody>`);
+  return html.replace(regex, `$1\n${rowsHtml}\n  $2`);
 }
 
 try {

@@ -212,9 +212,12 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 .compat{padding:120px 56px}
 .compat-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:48px;flex-wrap:wrap;gap:24px}
 .compat-search-wrap{display:flex;flex-direction:column;gap:10px;align-items:flex-end}
-.compat-search{font-family:var(--f-mono);font-size:13px;background:rgba(255,255,255,.6);border:1px solid rgba(28,51,38,.1);color:var(--text);padding:10px 18px;outline:none;border-radius:100px;width:240px;transition:border-color .3s,box-shadow .3s;backdrop-filter:blur(12px)}
+.compat-search-field{position:relative;width:100%;max-width:240px}
+.compat-search{font-family:var(--f-mono);font-size:13px;background:rgba(255,255,255,.6);border:1px solid rgba(28,51,38,.1);color:var(--text);padding:10px 40px 10px 18px;outline:none;border-radius:100px;width:100%;transition:border-color .3s,box-shadow .3s;backdrop-filter:blur(12px)}
 .compat-search:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(79,163,107,.12)}
 .compat-search::placeholder{color:rgba(107,101,88,.4)}
+.compat-search-clear{display:none;position:absolute;top:50%;right:14px;transform:translateY(-50%);border:none;background:transparent;color:var(--muted);font-family:var(--f-mono);font-size:13px;cursor:pointer;padding:0;line-height:1}
+.compat-search-clear:hover{color:var(--forest)}
 .filter-row{display:flex;gap:6px}
 .f-btn{font-family:var(--f-mono);font-size:10px;padding:6px 14px;border-radius:100px;border:1.5px solid rgba(28,51,38,.12);background:transparent;color:var(--muted);cursor:none;letter-spacing:.08em;text-transform:uppercase;transition:all .25s}
 .f-btn.on,.f-btn:hover{background:var(--forest);color:var(--cream);border-color:var(--forest)}
@@ -564,7 +567,10 @@ footer{background:var(--forest);color:rgba(237,232,223,.6);padding:64px 56px 40p
       <h2 class="sec-head reveal">Does your stack<br/><em>survive</em> migration?</h2>
     </div>
     <div class="compat-search-wrap reveal">
-      <input class="compat-search" placeholder="Search packages…" id="cSearch" oninput="filterCompat()"/>
+      <div class="compat-search-field">
+        <input class="compat-search" placeholder="Search packages…" id="cSearch" oninput="filterCompat()"/>
+        <button type="button" class="compat-search-clear" id="cSearchClear" onclick="clearCompatSearch()" aria-label="Clear search">✕</button>
+      </div>
       <div class="filter-row">
         <button class="f-btn on" onclick="setFilter('all',this)">All</button>
         <button class="f-btn" onclick="setFilter('full',this)">✓ Works</button>
@@ -1416,7 +1422,7 @@ function pillHTML(v){
 function renderCompat(list){
   const body=document.getElementById('compatBody');
   if(!list.length){
-    body.innerHTML=`<tr><td colspan="5" class="suggest-row">No results — <a href="https://github.com/karadnagnath2007-hub/stackperf/issues/new?title=Add+package+request&body=Package+name%3A%0ACategory%3A%0ARspack+compat%3A%0ABun+compat%3A%0ADeno+compat%3A" target="_blank">suggest a package on GitHub →</a></td></tr>`;
+    body.innerHTML=`<tr><td colspan="5" class="suggest-row">No packages found. <a href="https://github.com/karadnagnath2007-hub/stackperf/issues/new?title=Add+package+request&body=Package+name%3A%0ACategory%3A%0ARspack+compat%3A%0ABun+compat%3A%0ADeno+compat%3A" target="_blank">Suggest it on GitHub →</a></td></tr>`;
     return;
   }
   body.innerHTML=list.map(p=>`
@@ -1431,10 +1437,23 @@ function renderCompat(list){
 }
  
 function filterCompat(){
-  const q=document.getElementById('cSearch').value.toLowerCase();
-  let res=pkgs.filter(p=>p.n.includes(q)||p.d.toLowerCase().includes(q));
-  if(activeFilter!=='all')res=res.filter(p=>p.rs===activeFilter||p.bn===activeFilter||p.dn===activeFilter);
+  const searchEl = document.getElementById('cSearch');
+  const clearButton = document.getElementById('cSearchClear');
+  const q = searchEl.value.trim().toLowerCase();
+  clearButton.style.display = q ? 'block' : 'none';
+  let res = pkgs.filter(p => {
+    const text = `${p.n} ${p.d}`.toLowerCase();
+    return text.includes(q);
+  });
+  if(activeFilter!=='all') res = res.filter(p=>p.rs===activeFilter||p.bn===activeFilter||p.dn===activeFilter);
   renderCompat(res);
+}
+ 
+function clearCompatSearch(){
+  const searchEl = document.getElementById('cSearch');
+  searchEl.value = '';
+  filterCompat();
+  searchEl.focus();
 }
  
 function setFilter(f,btn){
