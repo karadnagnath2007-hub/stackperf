@@ -578,7 +578,7 @@ footer{background:var(--forest);color:rgba(237,232,223,.6);padding:64px 56px 40p
     <p class="feat-subhead">Paste your package.json and instantly see what survives migration to Rspack, Bun, and Deno.</p>
   </div>
   <div class="stack-inner reveal">
-    <textarea class="t-code" id="stackInput" placeholder="Paste your package.json here…"></textarea>
+    <textarea class="t-code" id="mystackInput" placeholder="Paste your package.json here…" style="min-height:200px;width:100%;"></textarea>
     <div class="stack-actions">
       <button class="btn-fill" id="stackCheckButton" onclick="checkMyStack()">Check My Stack →</button>
     </div>
@@ -1491,7 +1491,7 @@ function isObject(value){
 }
  
 function checkMyStack(){
-  const input = document.getElementById('stackInput').value.trim();
+  const input = document.getElementById('mystackInput').value.trim();
   const errorEl = document.getElementById('stackError');
   const summaryEl = document.getElementById('stackSummary');
   const resultsEl = document.getElementById('stackResults');
@@ -1563,12 +1563,12 @@ function checkMyStack(){
 }
 
 function resetStackCheck(){
-  document.getElementById('stackInput').value = '';
+  document.getElementById('mystackInput').value = '';
   document.getElementById('stackError').style.display = 'none';
   document.getElementById('stackSummary').style.display = 'none';
   document.getElementById('stackResults').style.display = 'none';
   document.getElementById('stackResetButton').style.display = 'none';
-  document.getElementById('stackInput').focus();
+  document.getElementById('mystackInput').focus();
 }
  
 function setFilter(f,btn){
