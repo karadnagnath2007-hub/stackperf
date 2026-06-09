@@ -51,7 +51,7 @@
     "rs": "partial",
     "bn": "full",
     "dn": "partial",
-    "dt": "2026-06-04"
+    "dt": "2026-06-08"
   },
   {
     "n": "sveltekit",
@@ -123,7 +123,7 @@
     "rs": "partial",
     "bn": "full",
     "dn": "full",
-    "dt": "2026-06-04"
+    "dt": "2026-06-08"
   },
   {
     "n": "parcel",
@@ -285,7 +285,7 @@
     "rs": "full",
     "bn": "full",
     "dn": "partial",
-    "dt": "2026-06-04"
+    "dt": "2026-06-08"
   },
   {
     "n": "antd",
@@ -339,7 +339,7 @@
     "rs": "full",
     "bn": "full",
     "dn": "partial",
-    "dt": "2026-06-04"
+    "dt": "2026-06-08"
   },
   {
     "n": "jotai",
@@ -465,7 +465,7 @@
     "rs": "no",
     "bn": "full",
     "dn": "full",
-    "dt": "2026-06-04"
+    "dt": "2026-06-08"
   },
   {
     "n": "@nestjs/core",
@@ -474,7 +474,7 @@
     "rs": "no",
     "bn": "partial",
     "dn": "no",
-    "dt": "2026-06-04"
+    "dt": "2026-06-08"
   },
   {
     "n": "prisma",
@@ -735,7 +735,7 @@
     "rs": "full",
     "bn": "full",
     "dn": "partial",
-    "dt": "2026-06-04"
+    "dt": "2026-06-08"
   },
   {
     "n": "@tanstack/router",
