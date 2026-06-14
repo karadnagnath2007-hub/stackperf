@@ -12,38 +12,85 @@
 </script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>StackPerf.pages.dev — Build Pipeline Intelligence</title>
+<title>StackPerf — Rspack, Bun & Deno Compatibility Checker + Build Cost Calculator</title>
 <link rel="icon" type="image/png" href="/favicon.png">
  
 <!-- SEO -->
-<meta name="description" content="Benchmark, compare, and optimise your JavaScript build pipeline. Find out what slow builds are actually costing your team — and share the result with one link."/>
-<meta name="keywords" content="rspack, bun, deno, webpack, build tool, javascript, bundler, migration, esbuild, vite, ci pipeline"/>
+<meta name="description" content="Check 80+ npm packages for Rspack, Bun and Deno compatibility. Calculate what slow webpack builds cost your team and transpile your config in seconds."/>
+<meta name="keywords" content="rspack compatibility, bun npm packages, deno compatibility, webpack vs rspack, javascript build tool comparison, webpack migration cost, esbuild, vite, build roi calculator"/>
 <meta name="author" content="StackPerf.pages.dev"/>
 <meta name="robots" content="index, follow"/>
  
 <!-- Open Graph (WhatsApp, LinkedIn, Facebook) -->
-<meta property="og:title" content="StackPerf.pages.dev — Build Pipeline Intelligence"/>
-<meta property="og:description" content="Find out what your slow builds are actually costing your team. Compare webpack vs Rspack vs Bun — then share the result with one link."/>
+<meta property="og:title" content="StackPerf — Rspack, Bun & Deno Compatibility + Build Cost Calculator"/>
+<meta property="og:description" content="Check 80+ npm packages for Rspack, Bun and Deno compatibility. Calculate what slow webpack builds cost your team and transpile your config in seconds."/>
 <meta property="og:type" content="website"/>
 <meta property="og:url" content="https://stackperf.pages.dev"/>
 <meta property="og:image" content="https://stackperf.pages.dev/og-image.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
-<meta property="og:site_name" content="StackPerf.pages.dev"/>
+<meta property="og:site_name" content="StackPerf"/>
  
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="StackPerf.pages.dev — Build Pipeline Intelligence"/>
-<meta name="twitter:description" content="Find out what your slow builds are actually costing your team."/>
+<meta name="twitter:title" content="StackPerf — Rspack, Bun & Deno Compatibility Checker"/>
+<meta name="twitter:description" content="Check 80+ npm packages for Rspack, Bun and Deno support. Calculate your webpack migration ROI in seconds."/>
 <meta name="twitter:image" content="https://stackperf.pages.dev/og-image.png"/>
+<meta name="theme-color" content="#1C3326"/>
  
 <!-- Canonical -->
 <link rel="canonical" href="https://stackperf.pages.dev"/>
  
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "StackPerf",
+  "url": "https://stackperf.pages.dev",
+  "description": "Check 80+ npm packages for Rspack, Bun and Deno compatibility. Calculate what slow webpack builds cost your team.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Web",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": ["Rspack compatibility matrix", "Bun compatibility matrix", "Deno compatibility matrix", "Build ROI calculator", "Webpack to Rspack config transpiler"]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Rspack compatible with React?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. React and react-dom both have full Rspack support." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Bun support TypeScript?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Bun has full TypeScript support built in with no extra config." }
+    },
+    {
+      "@type": "Question",
+      "name": "How much faster is Rspack than webpack?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Rspack is typically 5–10x faster than webpack, cutting build times from 10–30 seconds down to under 2 seconds for most projects." }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I migrate from webpack to Rspack?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Rspack is webpack-compatible. Use StackPerf's Config Transpiler to convert your webpack.config.js to an Rspack config automatically." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Angular work with Rspack or Bun?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. Angular is currently broken on Rspack, Bun, and Deno. It has deep webpack dependencies that make migration difficult." }
+    }
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,700&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 <style>
 :root{
   --cream:#EDE8DF;
@@ -597,7 +644,7 @@ footer{background:var(--forest);color:rgba(237,232,223,.6);padding:64px 56px 40p
 </div>
  
 <nav id="nav">
-  <a href="#" class="nav-logo"><span class="pulse"></span>StackPerf.pages.dev</a>
+  <a href="#" class="nav-logo"><span class="pulse"></span>StackPerf</a>
   <ul class="nav-links">
     <li><a href="#features">Features</a></li>
     <li><a href="#calculator">Calculator</a></li>
@@ -620,8 +667,8 @@ footer{background:var(--forest);color:rgba(237,232,223,.6);padding:64px 56px 40p
   <div class="hero-left">
     <p class="eyebrow" id="eyebrow">Build Pipeline Intelligence · Beta v2</p>
     <h1 class="hero-title" id="heroTitle">
-      <span class="line">Your pipeline</span>
-      <span class="line">has a <em class="italic">pulse.</em></span>
+      <span class="line">Your build pipeline</span>
+      <span class="line">has a <em class="italic">cost.</em></span>
     </h1>
     <p class="hero-sub" id="heroSub">Benchmark, compare, and optimise your JavaScript build pipeline — then share exactly what it costs with your team.</p>
     <div class="hero-actions" id="heroActions">
@@ -1443,6 +1490,9 @@ footer{background:var(--forest);color:rgba(237,232,223,.6);padding:64px 56px 40p
     </tr>
   </tbody>
   </table>
+  <div id="showMoreWrap" style="text-align:center;margin-top:24px;display:none">
+    <button class="f-btn" id="showMoreBtn" onclick="toggleCompatRows()" style="font-size:12px;padding:10px 24px"></button>
+  </div>
   <div class="suggest-row">Missing a package? <a href="https://github.com/karadnagnath2007-hub/stackperf/issues/new?title=Add+package+request&body=Package+name%3A%0ACategory%3A%0ARspack+compat%3A%0ABun+compat%3A%0ADeno+compat%3A" target="_blank" rel="noopener">Suggest it on GitHub →</a></div>
 </section>
  
@@ -1488,7 +1538,7 @@ module.exports = {
 <footer>
   <div class="footer-top">
     <div>
-      <div class="footer-logo">StackPerf.pages.dev</div>
+      <div class="footer-logo">StackPerf</div>
       <p class="footer-tagline">Build pipeline intelligence for JavaScript teams moving fast.</p>
     </div>
     <div class="footer-col">
@@ -1662,28 +1712,64 @@ fetch('packages.json')
     filterCompat();
   });
  
+const COMPAT_LIMIT = 10;
+let compatExpanded = false;
+let lastCompatList = [];
+
 function pillHTML(v){
   const cls=v==='full'?'pill-full':v==='partial'?'pill-part':'pill-no';
   const icon=v==='full'?'✓':v==='partial'?'~':'✕';
   const lbl=v==='full'?'Supported':v==='partial'?'Partial':'Broken';
   return `<span class="pill-table ${cls}">${icon} ${lbl}</span>`;
 }
- 
+
+function rowHTML(p){
+  return `<tr>
+    <td><div class="pkg-name">${p.n}</div><div class="pkg-desc">${p.d}</div></td>
+    <td>${pillHTML(p.rs)}</td>
+    <td>${pillHTML(p.bn)}</td>
+    <td>${pillHTML(p.dn)}</td>
+    <td><div class="pkg-date">${p.dt}</div></td>
+  </tr>`;
+}
+
 function renderCompat(list){
-  const body=document.getElementById('compatBody');
+  lastCompatList = list;
+  compatExpanded = false;
+  const body = document.getElementById('compatBody');
+  const wrap = document.getElementById('showMoreWrap');
+  const btn  = document.getElementById('showMoreBtn');
+
   if(!list.length){
     body.innerHTML=`<tr><td colspan="5" class="suggest-row">No packages found. <a href="https://github.com/karadnagnath2007-hub/stackperf/issues/new?title=Add+package+request&body=Package+name%3A%0ACategory%3A%0ARspack+compat%3A%0ABun+compat%3A%0ADeno+compat%3A" target="_blank">Suggest it on GitHub →</a></td></tr>`;
+    wrap.style.display = 'none';
     return;
   }
-  body.innerHTML=list.map(p=>`
-    <tr>
-      <td><div class="pkg-name">${p.n}</div><div class="pkg-desc">${p.d}</div></td>
-      <td>${pillHTML(p.rs)}</td>
-      <td>${pillHTML(p.bn)}</td>
-      <td>${pillHTML(p.dn)}</td>
-      <td><div class="pkg-date">${p.dt}</div></td>
-    </tr>
-  `).join('');
+
+  const visible = list.slice(0, COMPAT_LIMIT);
+  body.innerHTML = visible.map(rowHTML).join('');
+
+  if(list.length > COMPAT_LIMIT){
+    wrap.style.display = 'block';
+    btn.textContent = `Show ${list.length - COMPAT_LIMIT} more →`;
+  } else {
+    wrap.style.display = 'none';
+  }
+}
+
+function toggleCompatRows(){
+  const body = document.getElementById('compatBody');
+  const btn  = document.getElementById('showMoreBtn');
+  compatExpanded = !compatExpanded;
+
+  if(compatExpanded){
+    body.innerHTML = lastCompatList.map(rowHTML).join('');
+    btn.textContent = '↑ Show less';
+  } else {
+    body.innerHTML = lastCompatList.slice(0, COMPAT_LIMIT).map(rowHTML).join('');
+    btn.textContent = `Show ${lastCompatList.length - COMPAT_LIMIT} more →`;
+    document.getElementById('compat').scrollIntoView({behavior:'smooth', block:'start'});
+  }
 }
  
 function filterCompat(){
